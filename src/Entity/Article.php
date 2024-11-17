@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -26,56 +26,23 @@ class Article
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $publishedAt = null;
 
-    public function getId(): ?int
+    // Relation avec User (ManyToOne)
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    // Getter pour author
+    public function getAuthor(): ?User
     {
-        return $this->id;
+        return $this->author;
     }
 
-    public function getTitle(): ?string
+    // Setter pour author
+    public function setAuthor(User $author): static
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
-
+        $this->author = $author;
         return $this;
     }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(?string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function isIsPublished(): ?bool
-    {
-        return $this->isPublished;
-    }
-
-    public function setIsPublished(bool $isPublished): static
-    {
-        $this->isPublished = $isPublished;
-
-        return $this;
-    }
-
-    public function getPublishedAt(): ?\DateTimeInterface
-    {
-        return $this->publishedAt;
-    }
-
-    public function setPublishedAt(\DateTimeInterface $publishedAt): static
-    {
-        $this->publishedAt = $publishedAt;
-
-        return $this;
-    }
+    // Autres méthodes (getters, setters, etc.)
 }
